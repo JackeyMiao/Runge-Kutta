@@ -1,0 +1,29 @@
+function param_d = derive(param)
+    x=param(1);
+    y=param(2);
+    v=param(3);
+    theta=param(4);
+    m=260;
+    s=0.24;
+    v_s=340;
+    M=v/v_s;
+    alpha=2;
+    g=9.81;
+    Cx0=[M^2,M,1];
+    Cx1=[0.0002,0.0038,0.1582;-0.0022,-0.0132,-0.8520;0.0115,-0.0044,1.9712];
+    Cx2=[alpha^2;alpha;1];
+    Cx=Cx0*Cx1*Cx2;
+    ro=1.225*exp(-0.00015*y);
+    D=0.5*ro*v^2*s*Cx;
+    
+    Cy0=[M^2,M,1];
+    Cy1=[-0.026;0.0651;0.4913];
+    Cy=Cy0*Cy1*alpha;
+    L=0.5*ro*v^2*s*Cy;
+    param_d=[0;0;0;0];
+    %依次为x、y、v、θ导数
+    param_d(1)=v*cos(theta);
+    param_d(2)=v*sin(theta);
+    param_d(3)=-D/m-g*sin(theta);
+    param_d(4)=-g*cos(theta)/v+L/(m*v);
+end
